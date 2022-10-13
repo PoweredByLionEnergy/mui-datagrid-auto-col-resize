@@ -3,7 +3,8 @@ import DataGridProDemo from "./DataGridProDemo";
 function App() {
   return (
     <div className="App">
-      <DataGridProDemo />
+      <DataGridProDemo id="DataGrid1" />
+      <DataGridProDemo id="DataGrid2" />
     </div>
   );
 }

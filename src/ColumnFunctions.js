@@ -9,8 +9,10 @@
  *
  * Both methods appear to have more-or-less identical performance on average
  */
-const getAllCellsInAColumn = (colIndex) =>
-  document.querySelectorAll(`[aria-colindex="${colIndex + 1}"]`);
+const getAllCellsInAColumn = (gridId, colIndex) =>
+  document.querySelectorAll(
+    `[aria-label="${gridId}"] [aria-colindex="${colIndex + 1}"]`
+  );
 
 function getTextWidth(text, font) {
   // re-use canvas object for better performance
@@ -34,23 +36,23 @@ function getCanvasFont(el = document.body) {
   return `${fontWeight} ${fontSize} ${fontFamily}`;
 }
 
-function getMaxColWidthWithCanvas(colIndex) {
+function getMaxColWidthWithCanvas(gridId, colIndex) {
   // No columns smaller than 50px allowed
   const MIN_WIDTH = 50;
   const MUI_WIDTH_BUFFER = 25;
   let width = MIN_WIDTH;
-  getAllCellsInAColumn(colIndex).forEach((cell) => {
+  getAllCellsInAColumn(gridId, colIndex).forEach((cell) => {
     const newWidth = getTextWidth(cell.textContent, getCanvasFont(cell));
     width = Math.max(width, newWidth);
   });
   return Math.ceil(width) + MUI_WIDTH_BUFFER;
 }
 
-function getMaxWidthOfCol(colIndex) {
+function getMaxWidthOfCol(gridId, colIndex) {
   // No columns smaller than 50px allowed
   const MIN_WIDTH = 50;
   // The extra 32 is needed to prevent MUI from adding the "..."
-  const MUI_WIDTH_BUFFER = 32;
+  const MUI_WIDTH_BUFFER = 33;
 
   // Pixels needed to render a certain number of characters is hard to calculate.
   // Instead, create an invisible element, insert the HTML of the cell, and then
@@ -68,9 +70,9 @@ function getMaxWidthOfCol(colIndex) {
 
   const widths = [];
 
-  getAllCellsInAColumn(colIndex).forEach((cell) => {
+  getAllCellsInAColumn(gridId, colIndex).forEach((cell) => {
     let invisibleCell = document.createElement("div");
-    invisibleCell.textContent = cell.textContent;
+    invisibleCell.innerHTML = cell.innerHTML;
     invisibleCell.style.width = "max-content";
     invisibleCell.style.maxWidth = "none";
     invisibleCell.style.minWidth = "none";

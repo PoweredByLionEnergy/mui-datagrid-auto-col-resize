@@ -11,7 +11,7 @@ import { getMaxWidthOfCol } from "./ColumnFunctions";
  *
  * However, it still feels very nice/natural to have when using the DataGrid(Pro)
  */
-export default function DataGridProDemo() {
+export default function DataGridProDemo({ id }) {
   // MUI has a data grid generator function for filling your grid with dummy data
   const { data } = useDemoData({
     dataSet: "Commodity",
@@ -28,9 +28,13 @@ export default function DataGridProDemo() {
     defaultDoubleClickState
   );
 
+  if (!id) throw new Error("An 'id' prop is required for this component!");
+
   return (
-    <Box sx={{ height: 1048, width: "100%" }}>
+    <Box sx={{ height: 540, width: "100%" }}>
       <DataGridPro
+        // There is no "id" prop in the DataGrid API, "aria-label" is used instead
+        aria-label={id}
         apiRef={gridRef}
         rows={data.rows}
         columns={data.columns}
@@ -66,7 +70,7 @@ export default function DataGridProDemo() {
 
             if (colIndex !== -1) {
               // const newWidth = getMaxColWidthWithCanvas(colIndex);
-              const newWidth = getMaxWidthOfCol(colIndex);
+              const newWidth = getMaxWidthOfCol(id, colIndex);
               // console.log("RESIZE", {
               //   colIndex,
               //   newWidth,
